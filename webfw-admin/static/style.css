@@ -1,0 +1,103 @@
+* {
+margin: 0;
+}
+html, body {
+    color: black;
+    margin: 0;
+    padding: 0;
+    font-family: Verdana;
+    font-size: 12px;
+    min-height: 100%;
+}
+
+a,a:hover,a:link,a:active{
+        color: orange;
+        padding: 1px;
+        text-decoration: none;
+}
+
+ul, li {
+        color: #2c2c2c;
+}
+
+#logo {
+        width: 200px;
+}
+
+#head {
+    border-bottom: 2px solid orange;
+}
+
+#navigation {
+    width: 200px;
+    float: left;
+    margin-right: 10px;
+    padding-top: 10px;
+    border-right: 1px solid orange;
+}
+
+#footer{
+    border-top: 2px solid orange;
+    height: 30px;
+    clear: both;
+}
+#push {
+        height: 30px;
+    clear: both;
+}
+
+#wrapper {
+        min-height: 100%;
+        height: auto;
+        height: 100%;
+        margin: 0 auto -32px;
+}
+
+#content {
+        padding-top: 10px;
+}
+
+#policy {
+        font-family: Verdana;
+    font-size: 12px;
+        width: 600px;
+        border-collapse:collapse;
+}
+#policy td {
+        padding: 3px;
+        border-bottom: 1px solid orange;
+}
+#policy thead td {
+        background-color: #FFB600;
+        color: #fff;  
+        font-weight: bold;
+}
+#policy thead td {
+    padding: 3px;
+}
+#policy tr.d0 td {
+        background-color: #FFD773;
+}
+#policy tr.d0 input {
+	background-color: #FFD773;
+	border: 0;
+}
+#policy tr.d1 td {
+        background-color: #FEFEF2;
+}
+#policy tr.d1 input {
+        background-color: #FEFEF2;
+		border: 0;
+}
+#add {
+	width: 16px;
+	float: right;
+}
+#update {
+	width: 16px;
+	float: right;
+}
+#delete {
+	width: 16px;
+	float: right;
+}
