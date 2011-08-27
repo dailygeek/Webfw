@@ -27,12 +27,13 @@
 #define PID_FILE "/var/run/webfw.pid"
 
 struct value_struct{
-	char s_src_ip[INET_ADDRSTRLEN]; // source address as string
+        char s_src_ip[INET_ADDRSTRLEN]; // source address as string
         char s_dst_ip[INET_ADDRSTRLEN]; // destination address as string
-	guint32 src_ip; //src address in network byte order
-  	guint32 dst_ip; // destination address in network byte order
-    	guint16 dst_port; //destination port to identify services 
-  	guint16 protocol; //connection protocol
+        guint32 src_ip; //src address in network byte order
+        guint32 dst_ip; // destination address in network byte order
+        guint16 dst_port; //destination port to identify services
+        guint16 protocol; //connection protocol
+        gchar *username; //Username asigned to the connection
 }; // used for whitelist and blacklist values
 
 struct handle_struct {
@@ -62,3 +63,4 @@ gint listman_init(struct handle_struct *handle);
 gboolean listman_check_key(GHashTable *list,struct value_struct *connection,guint64 now, guint64 timeout);
 
 gboolean fetch_entry(const gchar *url, struct value_struct *connection);
+gboolean checkpolicy(struct value_struct *connection);

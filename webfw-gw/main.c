@@ -64,7 +64,6 @@ gint parse_config(struct handle_struct *handle){
 	gkf = g_key_file_new();
 	
 	if (TRUE == g_key_file_load_from_file(gkf,"./default.conf",0,NULL)){
-	//if (TRUE == g_key_file_load_from_file(gkf,"/home/jeanm/workspace/jeanm/webfw/src/default.conf",0,NULL)){
 		if (TRUE == g_key_file_has_key(gkf,"website","url",NULL)){
 			handle->url = g_string_new(g_key_file_get_value(gkf,"website","url",NULL));
 			if (0 != handle->url->len)

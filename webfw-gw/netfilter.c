@@ -1,6 +1,3 @@
-/* -*- Mode:C; c-file-style:"gnu"; indent-tabs-mode:nil; -*-
- * iptables -A INPUT -p tcp -j NFQUEUE --queue-num 0
- * */
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,10 +26,10 @@ myworker (struct handle_struct *handle, void *packet, int len, struct timeval *t
   //guint64 val=(guint64)tv->tv_sec; Have not been able to gain a timestamp from any paket so far!
   time_t now = time (NULL);
   guint64 val=(guint64)now;  // using system time when paket arrives instead
-  
+
   i = (struct iphdr *) (packet);
   connection.protocol = i->protocol;
-  
+
   if( connection.protocol == 6 ){
         tcph = (struct tcphdr *)(packet + sizeof(struct iphdr));
         connection.dst_port = ntohs(tcph->dest);
@@ -68,11 +65,15 @@ myworker (struct handle_struct *handle, void *packet, int len, struct timeval *t
   }
   /* already in blacklist? */
   if (FALSE == listman_check_key(handle->blacklist,&connection,val,handle->timeout)){
-          if (TRUE == fetch_entry(handle->url->str,&connection)){
-                 listman_add2list(handle->whitelist,&connection,&val);
-                 return 0;
-          } else {
-             listman_add2list(handle->blacklist,&connection,&val);
+          if ( TRUE == fetch_entry(handle->url->str,&connection)){
+                g_debug("recieved user: %s",connection.username);
+                g_debug("Calling Check Policy Function");
+                if (TRUE == checkpolicy(&connection)){
+                        listman_add2list(handle->whitelist,&connection,&val);
+                        return 0;
+                }
+         } else {
+                listman_add2list(handle->blacklist,&connection,&val);
           }
   }
   g_debug("in blacklist");
@@ -105,8 +106,9 @@ int cb (struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
   /* hole payload ... falls es nicht klappt ... Paket durchreichen */
   if ((len = nfq_get_payload (nfa, (char **) &pkt)) < 0)
     return nfq_set_verdict(qh, id, NF_ACCEPT, 0, NULL);
-  
+
   nfq_get_timestamp(nfa,&tv);
   return nfq_set_verdict(qh, id, myworker (data, pkt, len,&tv) ? NF_DROP :
                           NF_ACCEPT, 0, NULL);
 }
+

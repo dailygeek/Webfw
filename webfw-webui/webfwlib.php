@@ -15,7 +15,7 @@ function timediff($value){
 function removeDB($conn,$uname){
   $query = "delete from list where user='{$uname}'";
   if (0 == $conn->queryExec($query)) {
-  	die($query.";\n failed\n");
+        die($query.";\n failed\n");
   }
 }
 
@@ -24,6 +24,9 @@ function getListDB($conn) {
         serviceDB($conn);
     foreach ($conn->query($sql) as $row) {
                 $tdiff = timediff($row['timestamp']);
+
+//              if ($tdiff > 600) {removeDB($conn,$row['login']); continue;}
+
         print $tdiff . "\t";
         print $row['ip'] . "\n";
     }
@@ -79,19 +82,19 @@ function getUser($conn,$ip){
 function check_for_ip($conn,$ip){
   $query = "select * from list ";
   $query = $query . "where ip='{$ip}'";
-  if (0 == $conn->query($query)->numRows()) {
-        //die($query.";\n failed\n");
+
+  try {
+     $results = $conn->query($query);
+     while ($row = $results->fetch()){
+        if (getTS() - $row['timestamp'] > 60)
+                return FALSE;
+        else
+                return TRUE;
+     }
+  }
+  catch (Exception $e){
+        die($query.";\n failed\n");
         return FALSE;
-   }
-   else {
-                $results = $conn->query($query);
-                while ($row = $results->fetch()){
-                        if (getTS() - $row['timestamp'] > 60)
-                                //remove entry....
-                                return FALSE;
-                        else
-                                return TRUE;
-                }
-   }
+  }
 }
 ?>
