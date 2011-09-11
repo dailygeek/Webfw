@@ -21,6 +21,6 @@ if (($serverip == getIP()) && (isset($_GET["src_ip"]))){
         }
 } else {
         sleep(10);
-        echo "SYSTEM ERROR";
+        echo "FALSE GUESS\n";
 }
 ?>
