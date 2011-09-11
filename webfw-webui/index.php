@@ -18,6 +18,7 @@ require_once("webfwlib.php");
 
 try {
         $db = new SQLiteDatabase('/mnt/db/.htfirewall.sdb');
+        $usersdb = new SQLiteDatabase('/mnt/db/users.sdb');
 }
 catch (Exception $e)
 {
@@ -32,7 +33,7 @@ if (!isset($_SESSION['uname'])){
                 $password = $_POST['password'];
 
                 #check for user in database
-                $users = $db->query("SELECT * FROM USERS WHERE USERNAME='$user'");
+                $users = $usersdb->query("SELECT * FROM USERS WHERE USERNAME='$user'");
                 if (!$users){
                        	echo '<div id="content">Wrong Username!<</div>';
                         header('refresh: 5; url=/');

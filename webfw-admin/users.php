@@ -1,6 +1,9 @@
 <?php
+error_reporting(E_ALL|E_STRICT);
+ini_set('display_errors', 1);
+
 try {
-        $db = new SQLiteDatabase('/mnt/db/.htfirewall.sdb');
+        $db = new SQLiteDatabase('/etc/webfw-admin/etc/users.sdb');
 }
 catch (Exception $e){
         echo 'Could not connect to database: ',  $e->getMessage(), "\n";
@@ -8,25 +11,27 @@ catch (Exception $e){
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  	$hash = $_POST['password'];
-	$rounds = 4096;
-	
-   	for ( $i = 1; $i <= $rounds; $i++)
+        $hash = $_POST['password'];
+        $rounds = 4096;
+
+        for ( $i = 1; $i <= $rounds; $i++)
       $hash = hash('sha256', $hash);
 
-	$query = 'insert into users values ("'.$_POST['username'].'", "'.$hash.'")';
-	$db->queryExec($query);
+        $query = 'insert into users values ("'.$_POST['username'].'", "'.$hash.'")';
+        $db->queryExec($query);
+
+        system("scp -i /etc/webfw-admin/etc/id_rsa -o GlobalKnownHostsFile=/etc/webfw-admin/etc/known_hosts /etc/webfw-admin/etc/users.sdb 192.168.123.2:/mnt/db/users.sdb");
 }
 echo '<form method="POST" action="?section=users">';
 echo '<table id="policy"><thead><tr><td>User</td></tr></thead><tbody>';
 $query = "select * from users";
 if (0 == $db->query($query)->numRows()) {
-	echo '<tr><td colspan="5">No policy defined yet!<td></tr>';
+        echo '<tr><td colspan="5">No policy defined yet!<td></tr>';
 }
 else {
-	$results = $db->query($query);
+        $results = $db->query($query);
     while ($row = $results->fetch()){
-		$i++;
+                $i++;
         echo "<tr class=\"d".($i & 1)."\">";
         echo "<td>".$row['username'];
         echo '<a href="delete.php?target=user&username='.$row['username'].'"><img src="static/delete.png" border="0" id="delete"></a>';
