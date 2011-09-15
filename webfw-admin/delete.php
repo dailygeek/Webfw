@@ -1,6 +1,7 @@
 <?php 
 try {
-        $db = new SQLiteDatabase('/etc/webfw-admin/etc/users.sdb');
+        $usersdb = new SQLiteDatabase('/etc/webfw-admin/etc/users.sdb');
+        $db = new SQLiteDatabase('/etc/webfw-admin/etc/htfirewall.sdb');
 }
 catch (Exception $e){
         echo 'Could not connect to database: ',  $e->getMessage(), "\n";
@@ -11,12 +12,11 @@ switch ($_GET['target']) {
                 $query = 'delete from user_policy where rowid='.$_GET['rowid'];
                 $db->queryExec($query);
                 header("Location: /?section=userpolicy");
-                system("scp -i /etc/webfw-admin/etc/id_rsa -o GlobalKnownHostsFile=/etc/webfw-admin/etc/known_hosts /etc/webfw-admin/etc/users.sdb root@192.168.123.2:/mnt/db/users.sdb");
                 break;
         case "user":
         $query = 'delete from users where username="'.$_GET['username'].'"';
-                $db->queryExec($query);
-                system("scp -i /etc/webfw-admin/etc/id_rsa -o GlobalKnownHostsFile=/etc/webfw-admin/etc/known_hosts /etc/webfw-admin/etc/users.sdb 192.168.123.2:/mnt/db/users.sdb");
+                $usersdb->queryExec($query);
+                system("scp -i /etc/webfw-admin/etc/id_rsa -o GlobalKnownHostsFile=/etc/webfw-admin/etc/known_hosts /etc/webfw-admin/etc/users.sdb root@192.168.123.2:/mnt/db/users.sdb");
                 header("Location: /?section=users");
                 break;
         default:
