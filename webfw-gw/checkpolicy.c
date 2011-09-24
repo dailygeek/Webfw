@@ -26,7 +26,7 @@ int sqlite_finalize(
   char **pzErrMsg          /* OUT: Error message */
 );
 
-gboolean checkpolicy(struct value_struct *connection, gchar* username)
+gboolean checkpolicy(struct value_struct *connection)
 {
 	sqlite *policydb;
 	sqlite_vm *dbcursor;
@@ -45,7 +45,7 @@ gboolean checkpolicy(struct value_struct *connection, gchar* username)
 	else
 		s_protocol = "ICMP";
 	
-	uerry = g_strdup_printf("select * from user_policy where username=\"%s\" and dst_ip=\"%s\" and dst_port = \"%i\" and prot = \"%s\";",connection->username,
+	querry = g_strdup_printf("select * from user_policy where username=\"%s\" and dst_ip=\"%s\" and dst_port = \"%i\" and prot = \"%s\";",connection->username,
     													connection->s_dst_ip,
     													connection->dst_port,
 														s_protocol);
